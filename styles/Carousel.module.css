@@ -15,3 +15,36 @@
   width: 0px;
   background: transparent;
 }
+
+.item {
+  width: var(--carousel-item-width);
+  margin-right: var(--carousel-item-margin);
+  scroll-snap-align: start;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.item img {
+  -webkit-user-drag: none;
+}
+
+.item p {
+  text-align: center;
+}
+
+.dotsContainer {
+  display: flex;
+  justify-content: center;
+}
+
+.dot {
+  background-color: lightgrey;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin: 10px 5px;
+}
+
+.dotCurrent {
+  background-color: grey;
+}

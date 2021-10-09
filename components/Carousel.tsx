@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import CarouselItem from "./CarouselItem";
+import Dots from "./CarouselDots";
 import styles from "../styles/Carousel.module.css";
 import { useSwipeable } from "react-swipeable";
 
@@ -17,38 +18,55 @@ const items = [
 ];
 
 const Carousel: React.FC = ({ ...restProps }) => {
-  const [positionX, setPositionX] = useState(0);
+  const [slide, setSlide] = useState(0);
   const carouselRef = useRef<HTMLDivElement>(null);
 
-  const goLeft = () => {
-    if (!carouselRef.current) return;
-
-    carouselRef.current.scrollLeft = carouselRef.current.scrollLeft + 600;
+  const prevSlide = () => {
+    const nextSlide = slide >= 2 ? slide - 2 : 0;
+    setSlide(nextSlide);
   };
 
-  const goRight = () => {
-    if (!carouselRef.current) return;
-
-    carouselRef.current.scrollLeft = carouselRef.current.scrollLeft - 600;
+  const nextSlide = () => {
+    const nextSlide = slide <= items.length - 2 ? slide + 2 : 0;
+    setSlide(nextSlide);
   };
 
-  const handlers = useSwipeable({
-    onSwipedLeft: goLeft,
-    onSwipedRight: goRight,
+  useEffect(() => {
+    if (!carouselRef.current) return;
+
+    const slideToScrollTo = carouselRef.current.children[slide];
+
+    if (slideToScrollTo) {
+      slideToScrollTo.scrollIntoView({
+        behavior: "smooth",
+        inline: "start",
+      });
+    }
+  }, [slide]);
+
+  const slideHandlers = useSwipeable({
+    onSwipedLeft: nextSlide,
+    onSwipedRight: prevSlide,
     trackMouse: true,
+    trackTouch: false,
   });
 
   return (
-    <div
-      className={`${styles.carousel}`}
-      {...handlers}
-      ref={carouselRef}
-      tabIndex={0}
-    >
-      {items.map((item, index) => {
-        return <CarouselItem key={`Carousel_item_${index}`} name={item.name} />;
-      })}
-    </div>
+    <>
+      <div
+        className={`${styles.carousel}`}
+        {...slideHandlers}
+        ref={carouselRef}
+      >
+        {items.map((item, index) => {
+          return (
+            <CarouselItem key={`Carousel_item_${index}`} name={item.name} />
+          );
+        })}
+      </div>
+
+      <Dots slide={slide} totalSlides={items.length} />
+    </>
   );
 };
 
