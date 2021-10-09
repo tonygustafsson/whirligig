@@ -1,0 +1,17 @@
+.carousel {
+  display: flex;
+  width: calc((var(--carousel-item-width) + var(--carousel-item-margin)) * 3);
+  overflow: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  cursor: grab;
+}
+
+.carousel:active {
+  cursor: grabbing;
+}
+
+.carousel::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}

@@ -1,0 +1,15 @@
+.item {
+  width: var(--carousel-item-width);
+  margin-right: var(--carousel-item-margin);
+  scroll-snap-align: start;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.item img {
+  -webkit-user-drag: none;
+}
+
+.item p {
+  text-align: center;
+}
