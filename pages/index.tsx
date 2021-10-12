@@ -1,6 +1,6 @@
-import type { NextPage } from 'next'
-import Head from 'next/head'
-import Carousel from '../components/Carousel'
+import type { NextPage } from "next";
+import Head from "next/head";
+import Carousel from "../components/Carousel";
 
 const Home: NextPage = () => {
   return (
@@ -12,14 +12,12 @@ const Home: NextPage = () => {
       </Head>
 
       <main>
-        <h1>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
+        <h1>Carousel</h1>
 
         <Carousel />
       </main>
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;

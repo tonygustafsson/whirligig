@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import CarouselItem from "./CarouselItem";
 import Dots from "./CarouselDots";
+import Arrows from "./CarouselArrows";
 import styles from "../styles/Carousel.module.css";
 import { useSwipeable } from "react-swipeable";
 
@@ -52,7 +53,7 @@ const Carousel: React.FC = ({ ...restProps }) => {
   });
 
   return (
-    <>
+    <div className={styles.carouselWrapper}>
       <div
         className={`${styles.carousel}`}
         {...slideHandlers}
@@ -65,8 +66,9 @@ const Carousel: React.FC = ({ ...restProps }) => {
         })}
       </div>
 
-      <Dots slide={slide} totalSlides={items.length} />
-    </>
+      <Arrows prevSlide={prevSlide} nextSlide={nextSlide} />
+      <Dots setSlide={setSlide} slide={slide} totalSlides={items.length} />
+    </div>
   );
 };
 
