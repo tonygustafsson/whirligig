@@ -1,6 +1,25 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import Carousel from "../components/Carousel";
+import CarouselItem from "../components/CarouselItem";
+
+const carouselItems = [
+  { name: "Test 1" },
+  { name: "Test 2" },
+  { name: "Test 3" },
+  { name: "Test 4" },
+  { name: "Test 5" },
+  { name: "Test 6" },
+  { name: "Test 7" },
+  { name: "Test 8" },
+  { name: "Test 9" },
+  { name: "Test 10" },
+  { name: "Test 11" },
+  { name: "Test 12" },
+  { name: "Test 13" },
+  { name: "Test 14" },
+  { name: "Test 15" },
+];
 
 const Home: NextPage = () => {
   return (
@@ -14,7 +33,18 @@ const Home: NextPage = () => {
       <main>
         <h1>Carousel</h1>
 
-        <Carousel />
+        <Carousel
+          slideWidth={312}
+          slidesPerPage={3}
+          showArrows={true}
+          showDots={true}
+        >
+          {carouselItems.map((item, index) => {
+            return (
+              <CarouselItem key={`Carousel_item_${index}`} name={item.name} />
+            );
+          })}
+        </Carousel>
       </main>
     </div>
   );

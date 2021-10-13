@@ -5,30 +5,40 @@ import Arrows from "./CarouselArrows";
 import styles from "../styles/Carousel.module.css";
 import { useSwipeable } from "react-swipeable";
 
-const items = [
-  { name: "Test 1" },
-  { name: "Test 2" },
-  { name: "Test 3" },
-  { name: "Test 4" },
-  { name: "Test 5" },
-  { name: "Test 6" },
-  { name: "Test 7" },
-  { name: "Test 8" },
-  { name: "Test 9" },
-  { name: "Test 10" },
-];
+type Props = {
+  slidesPerPage: number;
+  slideWidth: number;
+  showArrows: boolean;
+  showDots: boolean;
+};
 
-const Carousel: React.FC = ({ ...restProps }) => {
+const Carousel: React.FC<Props> = ({
+  slidesPerPage = 3,
+  slideWidth = 312,
+  showArrows = true,
+  showDots = true,
+  children,
+  ...restProps
+}) => {
   const [slide, setSlide] = useState(0);
   const carouselRef = useRef<HTMLDivElement>(null);
 
+  const noOfChildren = React.Children.toArray(children).length;
+  const totalPages = Math.ceil(noOfChildren / slidesPerPage);
+
+  if (!children) {
+    return null;
+  }
+
   const prevSlide = () => {
-    const nextSlide = slide >= 2 ? slide - 2 : 0;
+    const nextSlide =
+      slide > 1 ? slide - slidesPerPage : noOfChildren - slidesPerPage;
     setSlide(nextSlide);
   };
 
   const nextSlide = () => {
-    const nextSlide = slide <= items.length - 2 ? slide + 2 : 0;
+    const nextSlide =
+      slide < noOfChildren - totalPages ? slide + slidesPerPage : 0;
     setSlide(nextSlide);
   };
 
@@ -53,21 +63,38 @@ const Carousel: React.FC = ({ ...restProps }) => {
   });
 
   return (
-    <div className={styles.carouselWrapper}>
+    <div className={styles.carouselWrapper} {...restProps}>
       <div
         className={`${styles.carousel}`}
         {...slideHandlers}
         ref={carouselRef}
+        style={{
+          width: `${slidesPerPage * slideWidth}px`,
+        }}
       >
-        {items.map((item, index) => {
+        {React.Children.toArray(children).map((child, index) => {
           return (
-            <CarouselItem key={`Carousel_item_${index}`} name={item.name} />
+            <div
+              key={`carousel_item_${index}`}
+              style={{ width: `${slideWidth}px` }}
+            >
+              {child}
+            </div>
           );
         })}
       </div>
 
-      <Arrows prevSlide={prevSlide} nextSlide={nextSlide} />
-      <Dots setSlide={setSlide} slide={slide} totalSlides={items.length} />
+      {totalPages > 1 && (
+        <>
+          <Arrows prevSlide={prevSlide} nextSlide={nextSlide} />
+          <Dots
+            setSlide={setSlide}
+            slide={slide}
+            totalPages={totalPages}
+            slidesPerPage={slidesPerPage}
+          />
+        </>
+      )}
     </div>
   );
 };

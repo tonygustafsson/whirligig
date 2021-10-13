@@ -7,7 +7,6 @@
 .carousel {
   display: flex;
   position: relative;
-  width: calc((var(--carousel-item-width) + var(--carousel-item-margin)) * 3);
   overflow: auto;
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
@@ -26,8 +25,8 @@
 }
 
 .item {
-  width: var(--carousel-item-width);
-  margin-right: var(--carousel-item-margin);
+  margin-right: 12px;
+  min-height: 445px;
   scroll-snap-align: start;
   user-select: none;
   -webkit-user-drag: none;
