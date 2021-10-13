@@ -5,14 +5,12 @@ import styles from "../styles/Carousel.module.css";
 import SwipeableViews from "react-swipeable-views";
 
 type Props = {
-  slidesPerPage: number;
   slideWidth: number;
   showArrows: boolean;
   showDots: boolean;
 };
 
 const Carousel: React.FC<Props> = ({
-  slidesPerPage = 3,
   slideWidth = 312,
   showArrows = true,
   showDots = true,
@@ -20,6 +18,7 @@ const Carousel: React.FC<Props> = ({
   ...restProps
 }) => {
   const [index, setIndex] = useState(0);
+  const [slidesPerPage, setSlidesPerPage] = useState(0);
   const carouselRef = useRef<HTMLDivElement>(null);
 
   if (!children) {
@@ -47,17 +46,22 @@ const Carousel: React.FC<Props> = ({
     setIndex(index);
   };
 
+  useEffect(() => {
+    if (carouselRef.current) {
+      setSlidesPerPage(Math.floor(document.body.clientWidth / slideWidth));
+    }
+  }, [slideWidth, carouselRef]);
+
   return (
     <div className={styles.carouselWrapper} {...restProps}>
       <div
         className={`${styles.carousel}`}
         ref={carouselRef}
-        style={{
-          width: `${slidesPerPage * slideWidth}px`,
-        }}
+        style={{ width: `${slidesPerPage * slideWidth}px` }}
       >
         <SwipeableViews
           index={index}
+          resistance
           enableMouseEvents
           onChangeIndex={onChangeIndex}
         >
@@ -81,16 +85,17 @@ const Carousel: React.FC<Props> = ({
         </SwipeableViews>
       </div>
 
-      {pages.length > 1 && (
-        <>
-          <Arrows index={index} totalPages={pages.length} setIndex={setIndex} />
-          <Dots
-            setIndex={setIndex}
-            index={index}
-            totalPages={pages.length}
-            slidesPerPage={slidesPerPage}
-          />
-        </>
+      {pages.length > 1 && showArrows && (
+        <Arrows index={index} totalPages={pages.length} setIndex={setIndex} />
+      )}
+
+      {pages.length > 1 && showDots && (
+        <Dots
+          setIndex={setIndex}
+          index={index}
+          totalPages={pages.length}
+          slidesPerPage={slidesPerPage}
+        />
       )}
     </div>
   );

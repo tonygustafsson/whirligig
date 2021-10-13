@@ -2,6 +2,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import Carousel from "../components/Carousel";
 import CarouselItem from "../components/CarouselItem";
+import { useState, useEffect } from "react";
 
 const carouselItems = [
   { name: "Test 1" },
@@ -21,6 +22,23 @@ const carouselItems = [
 ];
 
 const Home: NextPage = () => {
+  const [isMobile, setIsMobile] = useState<boolean>(true);
+
+  const mobileBreakpoint = 768;
+
+  const handleWindowSizeChange = () => {
+    setIsMobile(window.innerWidth <= mobileBreakpoint);
+  };
+
+  useEffect(() => {
+    setIsMobile(window.innerWidth <= mobileBreakpoint);
+    window.addEventListener("resize", handleWindowSizeChange);
+
+    return () => {
+      window.removeEventListener("resize", handleWindowSizeChange);
+    };
+  }, []);
+
   return (
     <div>
       <Head>
@@ -33,9 +51,8 @@ const Home: NextPage = () => {
         <h1>Carousel</h1>
 
         <Carousel
-          slideWidth={312}
-          slidesPerPage={3}
-          showArrows={true}
+          slideWidth={isMobile ? 212 : 312}
+          showArrows={!isMobile}
           showDots={true}
         >
           {carouselItems.map((item, index) => {
