@@ -18,7 +18,6 @@ const carouselItems = [
   { name: "Test 12" },
   { name: "Test 13" },
   { name: "Test 14" },
-  { name: "Test 15" },
 ];
 
 const Home: NextPage = () => {

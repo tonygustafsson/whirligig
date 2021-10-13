@@ -2,8 +2,9 @@ import React from "react";
 import styles from "../styles/Carousel.module.css";
 
 type Props = {
-  prevSlide: () => void;
-  nextSlide: () => void;
+  index: number;
+  totalPages: number;
+  setIndex: (index: number) => void;
 };
 
 const LeftArrowIcon: React.FC = () => (
@@ -30,19 +31,32 @@ const RightArrowIcon: React.FC = () => (
   </svg>
 );
 
-const CarouselArrows: React.FC<Props> = ({
-  prevSlide,
-  nextSlide,
-  ...restProps
-}) => (
-  <>
-    <div onClick={prevSlide} className={`${styles.arrow} ${styles.arrowLeft}`}>
-      <LeftArrowIcon />
-    </div>
-    <div onClick={nextSlide} className={`${styles.arrow} ${styles.arrowRight}`}>
-      <RightArrowIcon />
-    </div>
-  </>
-);
+const CarouselArrows: React.FC<Props> = ({ index, totalPages, setIndex }) => {
+  const prevSlide = () => {
+    const nextIndex = index > 0 ? index - 1 : 0;
+    setIndex(nextIndex);
+  };
 
+  const nextSlide = () => {
+    const nextIndex = index < totalPages - 1 ? index + 1 : totalPages - 1;
+    setIndex(nextIndex);
+  };
+
+  return (
+    <>
+      <div
+        onClick={prevSlide}
+        className={`${styles.arrow} ${styles.arrowLeft}`}
+      >
+        <LeftArrowIcon />
+      </div>
+      <div
+        onClick={nextSlide}
+        className={`${styles.arrow} ${styles.arrowRight}`}
+      >
+        <RightArrowIcon />
+      </div>
+    </>
+  );
+};
 export default CarouselArrows;

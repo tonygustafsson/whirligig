@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
-import CarouselItem from "./CarouselItem";
 import Dots from "./CarouselDots";
 import Arrows from "./CarouselArrows";
 import styles from "../styles/Carousel.module.css";
-import { useSwipeable } from "react-swipeable";
+import SwipeableViews from "react-swipeable-views";
 
 type Props = {
   slidesPerPage: number;
@@ -20,77 +19,75 @@ const Carousel: React.FC<Props> = ({
   children,
   ...restProps
 }) => {
-  const [slide, setSlide] = useState(0);
+  const [index, setIndex] = useState(0);
   const carouselRef = useRef<HTMLDivElement>(null);
-
-  const noOfChildren = React.Children.toArray(children).length;
-  const totalPages = Math.ceil(noOfChildren / slidesPerPage);
 
   if (!children) {
     return null;
   }
 
-  const prevSlide = () => {
-    const nextSlide =
-      slide > 1 ? slide - slidesPerPage : noOfChildren - slidesPerPage;
-    setSlide(nextSlide);
+  const arrayToChunks = (array: Array<any>, chunkSize = 3) =>
+    array.reduce((resultArray, item, index) => {
+      const chunkIndex = Math.floor(index / chunkSize);
+
+      if (!resultArray[chunkIndex]) {
+        resultArray[chunkIndex] = []; // start a new chunk
+      }
+
+      resultArray[chunkIndex].push(item);
+
+      return resultArray;
+    }, []);
+
+  const pages: React.ReactNode[] = arrayToChunks(
+    React.Children.toArray(children)
+  );
+
+  const onChangeIndex = (index: number) => {
+    setIndex(index);
   };
-
-  const nextSlide = () => {
-    const nextSlide =
-      slide < noOfChildren - totalPages ? slide + slidesPerPage : 0;
-    setSlide(nextSlide);
-  };
-
-  useEffect(() => {
-    if (!carouselRef.current) return;
-
-    const slideToScrollTo = carouselRef.current.children[slide];
-
-    if (slideToScrollTo) {
-      slideToScrollTo.scrollIntoView({
-        behavior: "smooth",
-        inline: "start",
-      });
-    }
-  }, [slide]);
-
-  const slideHandlers = useSwipeable({
-    onSwipedLeft: nextSlide,
-    onSwipedRight: prevSlide,
-    trackMouse: true,
-    trackTouch: false,
-  });
 
   return (
     <div className={styles.carouselWrapper} {...restProps}>
       <div
         className={`${styles.carousel}`}
-        {...slideHandlers}
         ref={carouselRef}
         style={{
           width: `${slidesPerPage * slideWidth}px`,
         }}
       >
-        {React.Children.toArray(children).map((child, index) => {
-          return (
+        <SwipeableViews
+          index={index}
+          enableMouseEvents
+          onChangeIndex={onChangeIndex}
+        >
+          {pages.map((carouselItems: React.ReactNode, pageIndex: number) => (
             <div
-              key={`carousel_item_${index}`}
-              style={{ width: `${slideWidth}px` }}
+              className={styles.carouselPage}
+              key={`CarouselPage_${pageIndex}`}
             >
-              {child}
+              {React.Children.toArray(carouselItems).map((child, index) => {
+                return (
+                  <div
+                    key={`carousel_item_${index}`}
+                    style={{ width: `${slideWidth}px` }}
+                  >
+                    {child}
+                  </div>
+                );
+              })}
             </div>
-          );
-        })}
+          ))}
+        </SwipeableViews>
       </div>
 
-      {totalPages > 1 && (
+      {pages.length > 1 && (
         <>
-          <Arrows prevSlide={prevSlide} nextSlide={nextSlide} />
+          <Arrows index={index} totalPages={pages.length} setIndex={setIndex} />
           <Dots
-            setSlide={setSlide}
-            slide={slide}
-            totalPages={totalPages}
+            setIndex={setIndex}
+            index={index}
+            totalPages={pages.length}
             slidesPerPage={slidesPerPage}
           />
         </>

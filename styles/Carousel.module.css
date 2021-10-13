@@ -8,8 +8,6 @@
   display: flex;
   position: relative;
   overflow: auto;
-  scroll-snap-type: x mandatory;
-  scroll-behavior: smooth;
   cursor: grab;
   margin: 0 auto;
   user-select: none;
@@ -19,21 +17,14 @@
   cursor: grabbing;
 }
 
-.carousel::-webkit-scrollbar {
-  width: 0px;
-  background: transparent;
+.carouselPage {
+  display: flex;
 }
 
 .item {
   margin-right: 12px;
   min-height: 445px;
-  scroll-snap-align: start;
   user-select: none;
-  -webkit-user-drag: none;
-}
-
-.item img {
-  -webkit-user-drag: none;
 }
 
 .item p {
