@@ -3,6 +3,7 @@ import Dots from "./CarouselDots";
 import Arrows from "./CarouselArrows";
 import styles from "../styles/Carousel.module.css";
 import SwipeableViews from "react-swipeable-views";
+import useScreen from "../hooks/useScreen";
 
 type Props = {
   slideWidth: number;
@@ -20,6 +21,7 @@ const Carousel: React.FC<Props> = ({
   const [index, setIndex] = useState(0);
   const [slidesPerPage, setSlidesPerPage] = useState(0);
   const carouselRef = useRef<HTMLDivElement>(null);
+  const { bodyWidth } = useScreen();
 
   if (!children) {
     return null;
@@ -39,7 +41,8 @@ const Carousel: React.FC<Props> = ({
     }, []);
 
   const pages: React.ReactNode[] = arrayToChunks(
-    React.Children.toArray(children)
+    React.Children.toArray(children),
+    slidesPerPage
   );
 
   const onChangeIndex = (index: number) => {
@@ -48,9 +51,9 @@ const Carousel: React.FC<Props> = ({
 
   useEffect(() => {
     if (carouselRef.current) {
-      setSlidesPerPage(Math.floor(document.body.clientWidth / slideWidth));
+      setSlidesPerPage(Math.floor(bodyWidth / slideWidth) || 1);
     }
-  }, [slideWidth, carouselRef]);
+  }, [slideWidth, carouselRef, bodyWidth]);
 
   return (
     <div className={styles.carouselWrapper} {...restProps}>

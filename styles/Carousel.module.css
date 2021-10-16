@@ -33,7 +33,8 @@
   -webkit-user-drag: none;
 }
 
-.item img {
+.itemImg {
+  width: 100%;
   user-select: none;
   -webkit-user-drag: none;
 }

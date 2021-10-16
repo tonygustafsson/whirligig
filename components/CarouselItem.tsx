@@ -7,7 +7,11 @@ type Props = {
 
 const CarouselItem: React.FC<Props> = ({ name, ...restProps }) => (
   <div className={styles.item} {...restProps}>
-    <img src="https://via.placeholder.com/300x400" alt={name} />
+    <img
+      className={styles.itemImg}
+      src="https://via.placeholder.com/300x400"
+      alt={name}
+    />
     <p>{name}</p>
   </div>
 );
